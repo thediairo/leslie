@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carta de Despedida | Con Cariño</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --sello-size: 70px;
+      --color-papel: #f5eedc;
+      --color-lineas: #d9c7a7;
+      --color-borde: #8b0000;
+      --color-sobre: #e3d5b8;
+      --color-sobre-oscuro: #b8a88a;
+      --color-tinta: #3a2c1a;
+      --color-sello: linear-gradient(135deg, #c62828, #8e0000);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+      font-family: 'EB Garamond', serif;
+      overflow-x: hidden;
+      color: var(--color-tinta);
+    }
+
+    /* Estrellas de fondo */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--duration) infinite ease-in-out;
+      opacity: var(--opacity);
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Bienvenida */
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .message {
+      opacity: 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      max-width: 80%;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      transition: all 1s ease;
+      transform: translateY(20px);
+      font-weight: 300;
+    }
+
+    .message.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #msg1 { transition-delay: 0.2s; }
+    #msg2 { transition-delay: 0.6s; }
+    #msg3 { transition-delay: 1s; }
+
+    /* Sobre con sello (versión premium) */
+    #sobre-container {
+      position: relative;
+      perspective: 1000px;
+    }
+
+    #envelope {
+      width: 350px;
+      height: 240px;
+      background: var(--color-sobre);
+      border: 4px solid var(--color-sobre-oscuro);
+      position: relative;
+      border-radius: 6px;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.5),
+        inset 0 0 30px rgba(255, 255, 255, 0.1);
+      transition: all 0.5s ease;
+      cursor: pointer;
+      transform-style: preserve-3d;
+    }
+
+    #envelope::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--color-sobre);
+      clip-path: polygon(0 0, 100% 0, 50% 50%);
+      top: 0;
+      left: 0;
+      z-index: 2;
+      transition: transform 0.8s ease;
+      transform-origin: top;
+      box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+      border-top: 4px solid var(--color-sobre-oscuro);
+    }
+
+
+
+    #envelope.open::before {
+      transform: rotateX(180deg);
+    }
+
+    /* Sello de cera premium */
+    #sello {
+      width: var(--sello-size);
+      height: var(--sello-size);
+      background: var(--color-sello);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      box-shadow: 
+        0 0 25px rgba(198, 40, 40, 0.6),
+        inset 0 0 20px rgba(255, 255, 255, 0.2),
+        0 0 5px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      border: 3px solid #5a0000;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.9);
+      font-family: 'Caveat', cursive;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.3;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    #sello::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), transparent 70%);
+      opacity: 0.3;
+    }
+
+    #sello:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    #sello.break {
+      animation: breakSeal 1s ease forwards;
+    }
+
+    @keyframes breakSeal {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    }
+
+    /* Efecto de polvo de cera rota */
+    .seal-dust {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 4;
+      opacity: 0;
+    }
+
+    .seal-dust span {
+      position: absolute;
+      background: rgba(198, 40, 40, 0.7);
+      border-radius: 50%;
+      animation: dust-fall 1.5s ease-out forwards;
+    }
+
+    @keyframes dust-fall {
+      0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) rotate(360deg); opacity: 0; }
+    }
+
+    /* Carta (diseño vintage premium) */
+    #card {
+      display: none;
+      width: 90%;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 3rem 3rem;
+      background-color: var(--color-papel);
+      background-image: 
+        linear-gradient(rgba(210, 180, 140, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(210, 180, 140, 0.1) 1px, transparent 1px);
+      background-size: 40px 40px;
+      color: var(--color-tinta);
+      border-left: 10px solid var(--color-borde);
+      box-shadow: 
+        0 10px 50px rgba(0, 0, 0, 0.4),
+        inset 0 0 100px rgba(139, 69, 19, 0.1);
+      transform: rotate(-1deg);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.5s ease;
+      border-radius: 2px 8px 8px 2px;
+    }
+
+    #card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+      opacity: 0.3;
+      pointer-events: none;
+    }
+    
+
+    #card:hover {
+      transform: rotate(-0.5deg) scale(1.01);
+    }
+
+    /* Título de la carta */
+    .carta-titulo {
+      font-family: 'Caveat', cursive;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      color: var(--color-borde);
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .carta-titulo::after {
+      content: '';
+      display: block;
+      width: 150px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--color-borde), transparent);
+      margin: 10px auto;
+    }
+
+    /* Módulos mejorados */
+    .modulo {
+      margin-bottom: 2.5rem;
+      position: relative;
+      animation: fadeInUp 1s ease forwards;
+      opacity: 0;
+    }
+
+    .modulo:last-child {
+      margin-bottom: 0;
+    }
+
+    .modulo.texto p {
+      font-size: 1.2rem;
+      line-height: 1.9;
+      text-align: justify;
+      padding: 0 0.5rem;
+      position: relative;
+    }
+
+    .modulo.imagen {
+      text-align: center;
+      position: relative;
+    }
+
+    .modulo.imagen::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 1px dashed rgba(139, 69, 19, 0.3);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    .modulo.imagen img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      transition: all 0.5s ease;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      filter: sepia(0.2) contrast(1.1);
+    }
+
+    .modulo.imagen img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      filter: sepia(0.1) contrast(1.05);
+    }
+
+    .modulo.texto-imagen {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .modulo.texto-imagen img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.5s ease;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      filter: sepia(0.2);
+    }
+
+    .modulo.texto-imagen .texto {
+      font-size: 1.15rem;
+      line-height: 1.8;
+    }
+
+  
+ /* Estilo mejorado para módulos de video */
+  .modulo.video {
+    position: relative;
+    margin: 3rem 0;
+    text-align: center;
+    padding: 20px;
+    background: rgba(245, 238, 220, 0.4);
+    border-radius: 10px;
+    box-shadow: inset 0 0 20px rgba(139, 69, 19, 0.1);
+    border: 1px dashed rgba(139, 69, 19, 0.3);
+  }
+
+  .modulo.video video {
+    width: 100%;
+    max-width: 700px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(101, 67, 33, 0.4);
+    background: #000;
+    filter: sepia(0.15) contrast(1.1) brightness(0.98);
+    transition: all 0.5s ease;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Texto descriptivo mejorado */
+  .video-description {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--color-tinta);
+    margin-top: 1.5rem;
+    padding: 0 1rem;
+    text-align: center;
+    position: relative;
+    background: rgba(245, 238, 220, 0.7);
+    padding: 1.2rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-left: 3px solid var(--color-borde);
+  }
+
+  .video-description::before {
+    content: '"';
+    font-family: 'Caveat', cursive;
+    font-size: 3rem;
+    color: var(--color-borde);
+    position: absolute;
+    left: 5px;
+    top: -10px;
+    opacity: 0.3;
+  }
+
+  .video-description::after {
+    content: '"';
+    font-family: 'Caveat', cursive;
+    font-size: 3rem;
+    color: var(--color-borde);
+    position: absolute;
+    right: 5px;
+    bottom: -25px;
+    opacity: 0.3;
+  }
+
+  /* Marco decorativo mejorado */
+  .video-container {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .video-container::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    right: -12px;
+    bottom: -12px;
+    border: 1px solid rgba(139, 69, 19, 0.25);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+
+  /* Controles más legibles */
+  video::-webkit-media-controls-panel {
+    background: linear-gradient(to bottom, #f5eedc, #e0d5b8) !important;
+    filter: sepia(0.15) brightness(1.1);
+  }
+
+  video::-webkit-media-controls-play-button,
+  video::-webkit-media-controls-current-time-display,
+  video::-webkit-media-controls-time-remaining-display {
+    font-size: 1.1rem !important;
+    color: var(--color-tinta) !important;
+  }
+
+  /* Efecto hover más pronunciado */
+
+
+  /* Responsive */
+  @media screen and (max-width: 600px) {
+    .video-description {
+      font-size: 1.1rem;
+      padding: 1rem;
+    }
+    
+    .modulo.video {
+      padding: 15px;
+    }
+  }
+
+
+    /* Firma */
+    .firma {
+      font-family: 'Caveat', cursive;
+      font-size: 2.5rem;
+      text-align: right;
+      margin-top: 3rem;
+      color: var(--color-borde);
+      position: relative;
+      display: inline-block;
+      padding-right: 30px;
+    }
+
+    .firma::after {
+      content: '';
+      position: absolute;
+      bottom: 15px;
+      right: 0;
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-borde));
+    }
+
+    /* Decoraciones vintage */
+    .carta-decoracion {
+      position: absolute;
+      opacity: 0.08;
+      z-index: 0;
+      font-size: 8rem;
+      color: var(--color-borde);
+    }
+
+    .decoracion-1 {
+      top: 30px;
+      right: 30px;
+      transform: rotate(15deg);
+    }
+
+    .decoracion-2 {
+      bottom: 20px;
+      left: 20px;
+      transform: rotate(-10deg);
+    }
+
+    /* Mancha de café */
+    .coffee-stain {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(101, 67, 33, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    .stain-1 {
+      top: 15%;
+      left: 10%;
+      transform: rotate(20deg);
+    }
+
+    .stain-2 {
+      bottom: 10%;
+      right: 15%;
+      width: 100px;
+      height: 100px;
+    }
+
+    /* Luz de vela parpadeante */
+    .candle-light {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 200, 150, 0.03), transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+      animation: flicker 5s infinite alternate;
+    }
+
+
+    /* ========== ESTILOS CORREGIDOS PARA TODOS LOS VIDEOS ========== */
+
+/* Elimina todos los efectos hover problemáticos */
+.modulo.video video:hover,
+.modulo.video-mixto video:hover,
+.modulo.video-especial video:hover {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Estilos base consistentes para todos los videos */
+.modulo video {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(101, 67, 33, 0.5);
+  background: #000;
+  display: block;
+  /* Estas propiedades son CRUCIALES para evitar problemas */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: none;
+}
+
+/* Elimina overlays nativos del navegador */
+.modulo video::-webkit-media-controls-overlay-enclosure {
+  display: none !important;
+}
+
+/* Controles personalizados consistentes */
+.modulo video::-webkit-media-controls-panel {
+  background: linear-gradient(to bottom, #f5eedc, #d8c9a8) !important;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+  border-radius: 0 0 8px 8px;
+}
+
+.modulo video::-webkit-media-controls-panel:hover {
+  opacity: 1;
+}
+
+/* ========== AJUSTES ESPECÍFICOS PARA CADA TIPO DE MÓDULO ========== */
+
+/* 1. Módulo de video estándar */
+.modulo.video {
+  position: relative;
+  margin: 3rem 0;
+  text-align: center;
+  padding: 20px;
+  background: rgba(245, 238, 220, 0.4);
+  border-radius: 10px;
+}
+
+.modulo.video video {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* 2. Módulo de video mixto (texto + video) */
+.modulo.video-mixto {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.modulo.video-mixto video {
+  width: 100%;
+  max-width: 400px;
+  align-self: center;
+}
+
+@media screen and (min-width: 600px) {
+  .modulo.video-mixto {
+    flex-direction: row;
+    align-items: center;
+  }
+  .modulo.video-mixto video {
+    width: 45%;
+    max-width: 350px;
+  }
+}
+
+/* 3. Módulo de video especial */
+.modulo.video-especial {
+  position: relative;
+  margin: 3.5rem auto;
+  max-width: 800px;
+  text-align: center;
+  padding: 2rem;
+  background: rgba(245, 238, 220, 0.7);
+  border-radius: 12px;
+  border: 2px solid var(--color-borde);
+}
+
+.modulo.video-especial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--color-borde), #d4a373, var(--color-borde));
+  z-index: 2;
+}
+
+/* ========== GARANTÍAS DE VISIBILIDAD ========== */
+/* Estas reglas aseguran que el video siempre se vea bien */
+.modulo video {
+  -webkit-transform: none !important;
+  transform: none !important;
+  -webkit-filter: none !important;
+  filter: none !important;
+}
+
+.modulo video::-webkit-media-text-track-container {
+  display: none !important;
+}
+
+.modulo video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+}
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.8; }
+      25% { opacity: 0.6; }
+      50% { opacity: 0.9; }
+      75% { opacity: 0.7; }
+    }
+
+    /* Animaciones */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modulo:nth-child(1) { animation-delay: 0.3s; }
+    .modulo:nth-child(2) { animation-delay: 0.6s; }
+    .modulo:nth-child(3) { animation-delay: 0.9s; }
+    .modulo:nth-child(4) { animation-delay: 1.2s; }
+    .modulo:nth-child(5) { animation-delay: 1.5s; }
+
+    /* Responsive */
+    @media screen and (min-width: 768px) {
+      .message {
+        font-size: 2.5rem;
+        max-width: 800px;
+      }
+
+      #envelope {
+        width: 380px;
+        height: 260px;
+      }
+
+      #sello {
+        --sello-size: 80px;
+        font-size: 16px;
+      }
+
+      .modulo.texto-imagen {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .modulo.texto-imagen img {
+        width: 45%;
+      }
+
+      .modulo.texto-imagen .texto {
+        width: 55%;
+        padding-right: 2rem;
+      }
+    }
+
+    /* Efecto de máquina de escribir */
+    .typewriter {
+      display: inline-block;
+      overflow: hidden;
+      border-right: 2px solid var(--color-borde);
+      white-space: nowrap;
+      margin: 0 auto;
+      letter-spacing: 1px;
+      animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+
+
+    
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--color-borde) }
+    }
+  </style>
+
+<style>
+  /* Modulo de texto especial */
+  .modulo.texto-especial {
+    position: relative;
+    font-size: 1.3rem;
+    line-height: 1.9;
+    padding: 3rem;
+    margin: 3rem auto;
+    max-width: 750px;
+    background-color: var(--color-papel);
+    background-image: 
+      url('https://www.transparenttextures.com/patterns/cream-paper.png'),
+      linear-gradient(var(--color-papel) 1px, transparent 1px);
+    background-size: 300px 300px, 24px 24px;
+    color: var(--color-tinta);
+    border-left: 10px solid var(--color-borde);
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.15),
+      inset 0 0 100px rgba(139, 69, 19, 0.05);
+    border-radius: 0 8px 8px 0;
+    text-align: justify;
+    font-family: 'EB Garamond', serif;
+    transform: rotate(-0.5deg);
+    transition: all 0.5s ease;
+  }
+
+  .modulo.texto-especial:hover {
+    transform: rotate(0deg) scale(1.01);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Decoraciones especiales */
+  .modulo.texto-especial::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 15px;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(139, 0, 0, 0.3), 
+      transparent);
+  }
+
+  .modulo.texto-especial::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 15px;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(139, 0, 0, 0.3), 
+      transparent);
+  }
+
+  /* Mancha de café decorativa */
+  .coffee-stain {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, 
+      rgba(101, 67, 33, 0.08) 0%, 
+      transparent 70%);
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+
+  .stain-1 {
+    top: 10%;
+    left: 5%;
+    transform: rotate(20deg);
+  }
+
+  .stain-2 {
+    bottom: 10%;
+    right: 5%;
+    width: 80px;
+    height: 80px;
+  }
+
+  /* Letra capital estilizada */
+  .modulo.texto-especial p:first-of-type::first-letter {
+    font-family: 'Caveat', cursive;
+    font-size: 4rem;
+    float: left;
+    line-height: 0.8;
+    margin-right: 10px;
+    color: var(--color-borde);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Efecto de subrayado en frases importantes */
+  .modulo.texto-especial strong {
+    font-weight: normal;
+    position: relative;
+    display: inline-block;
+  }
+
+  .modulo.texto-especial strong::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(139, 0, 0, 0.2);
+    z-index: -1;
+    transition: height 0.3s ease;
+  }
+
+  .modulo.texto-especial strong:hover::after {
+    height: 12px;
+    background: rgba(139, 0, 0, 0.1);
+  }
+
+  /* Firma especial */
+  .firma-especial {
+    font-family: 'Caveat', cursive;
+    font-size: 2.5rem;
+    text-align: right;
+    margin-top: 2rem;
+    color: var(--color-borde);
+    position: relative;
+    display: inline-block;
+    padding-right: 30px;
+  }
+
+  .firma-especial::before {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    right: 0;
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-borde));
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 600px) {
+    .modulo.texto-especial {
+      font-size: 1.15rem;
+      padding: 2rem;
+      margin: 2rem 1rem;
+    }
+    
+    .modulo.texto-especial p:first-of-type::first-letter {
+      font-size: 3rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Efecto de estrellas -->
+  <div class="stars" id="stars"></div>
+  <div class="candle-light"></div>
+
+  <!-- Bienvenida -->
+  <div class="center" id="welcome">
+    <div class="message" id="msg1">Leslie</div>
+    <div class="message" id="msg2">Tengo algo especial para ti...</div>
+    <div class="message" id="msg3">Gracias por todo</div>
+  </div>
+
+  <!-- Sobre con sello -->
+  <div class="center" id="sobre-container" style="display:none;">
+    <div id="envelope">
+      <div id="sello" title="Haz clic para abrir">Abre<br></div>
+      <div class="seal-dust" id="seal-dust"></div>
+    </div>
+    <p style="color: rgba(255, 255, 255, 0.7); margin-top: 2rem; font-style: italic; text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);">
+      <i class="fas fa-hand-pointer" style="margin-right: 8px;"></i> Abre el sobre
+    </p>
+  </div>
+
+  <!-- Carta -->
+  <div id="card">
+    <div class="carta-decoracion decoracion-1"><i class="fas fa-feather-alt"></i></div>
+    <div class="carta-decoracion decoracion-2"><i class="fas fa-heart"></i></div>
+    <div class="coffee-stain stain-1"></div>
+    <div class="coffee-stain stain-2"></div>
+    
+    <h1 class="carta-titulo typewriter">Holaaaaaa</h1>
+    
+    <!-- Módulo de texto -->
+    <div class="modulo texto">
+      <p>Antes de comenzar,</p>
+      <p>Quiero que sepas lo importante que es este proyecto para mí, no es el mas complejo, ni el mas grande, pero es para ti y por eso es el mas especial para mi.</p>
+    </div>
+
+    <!-- Módulo de imagen -->
+    <div class="modulo imagen">
+      <img src="fotoportada.jpeg" alt="Recuerdo especial">
+    </div>
+
+        <div class="modulo texto">
+      <p>Recuerdo como me sentía en segundo semestre, incómodo con mis amigos a los que no les importaba como me sentía, en el salón tenía un sentimiento de soledad y en los recesos solo no me sentía agusto y todo cambio cuando te conocí.</p>
+      <p>En ese momento no sabía lo importante que serías para mí, poco a poco empezamos a hablar y conocernos más, empecé a sentirme agusto contigo, empecé a quiterme ese sentimiento de soledad y recuerdo muy bien una acción que hiciste y que para mi significó mucho. Yo regresé de un receso en el que no me había sentido muy bien por culpa de la de siempre y tu me apoyaste sin tener realmente una razón para hacerlo, no eramos muy amigos aún, no solía contarte mis problemas, no tenías porque hacerlo y aún asi lo hiciste te importo como me sentía y desde ahí supe que tu eres especial.</p>
+    </div>
+
+
+<div class="modulo video">
+  <div class="video-container">
+    <video src="procura.mp4" controls poster="thumbnail.jpg"></video>
+  </div>
+  <p style="margin-top: 15px; font-style: italic; color: var(--color-tinta);">
+            Después de eso entendi que lo mejor para mi era estar con ustedes y no con la chusma, esa fue la mejor decisión que puede haber tomado y que nos llevo a realizar el mejor proyecto del mundo .
+  </p>
+</div>
+
+    <!-- Segundo módulo mixto -->
+    <div class="modulo texto-imagen">
+      <div class="texto">
+        <p>Ese proyecto fue maravilloso, pero lo mejor no fue ser los mejores, ni estar en la feria, ni el reconocimiento de la gente, lo más valioso es el recuerdo de haberlo hecho contigo, un recuerdo que jamás olvidaré.</p>
+      </div>
+      <img src="pimpollos.jpeg" alt="Otro recuerdo">
+    </div>
+
+    <!-- Módulo de despedida -->
+    <div class="modulo texto">
+      <p>Apartir de ahí entendí lo importante que serías para mí vida, como te dije cada momento contigo es especial, incluso las peleas .</p>
+    </div>
+
+     <div class="modulo imagen">
+      <img src="pelea1.jpeg" alt="Recuerdo especial">
+      <img src="pelea2.jpeg" alt="Recuerdo especial">
+      <img src="pelea3.jpeg" alt="Recuerdo especial">
+      <img src="pelea4.jpeg" alt="Recuerdo especial">
+      <img src="pelea5.jpeg" alt="Recuerdo especial">
+    </div>
+
+      <div class="modulo texto-imagen">
+      <div class="texto">
+        <p>Conocerte fue la experiencia más maravillosa que pudo pasarme, tantas risas y momentos divertidos, nuestros momentos de locura y peleas a muerte intensas, todo eso lo llevo en mi corazón.</p>
+      </div>
+      <img src="like.jpeg" alt="Otro recuerdo">
+    </div>
+
+        <div class="modulo texto-imagen">
+      <div class="texto">
+        <p>Extrañare todo de ti, desde tus gestos, tu risa, tu sonrisa, tus chistes, tu apoyo, las peleas con la cabeza (eras muy furte), tus abrazos, todo incluso despertarte cuando dormias </p>
+      </div>
+      <img src="zzzzzz.jpeg" alt="Otro recuerdo">
+    </div>
+
+   <div class="modulo video-mixto">
+  <div class="texto">
+    <p>Desde el primer proyecto que hicimos juntos nunca más quise trabajar con alguien más, siempre te quise en mi equipo porque contigo pasaba los mejores momentos y ahora te quiero siempre en mi vida para seguir pasando los mejores momentos.</p>
+  </div>
+  <video src="demonios.mp4" controls></video>
+</div>
+
+  <div class="modulo texto">
+      <p>No sé que nos deparará el futuro, pero espero poder compartilo juntos, tengo muchas duda de mi futuro y esas cosas, lo único que tengo claro es que quiero que seas parte de el, como te lo dije en la primera carta que te hice nunca olvidaré todo lo que hiciste por mi, gracias a ti soy quien soy hoy para mí lo que hiciste tiene un valor incalculable y eso te define como la persona más maravillosa de mi vida estudiantil, no importa cuántas más conozca ni lo que hagan porque tú me apoyaste cuando en tu vida era nadie y escribir eso me pone los ojos un poco llorosos porque es uno de los gestos más grandes que alguien me ha dado, gracias. Pero bueno continuemos.</p>
+    </div>
+
+      <div class="modulo texto-imagen">
+      <div class="texto">
+        <p>Una cosa que quizás no sabes es que no me gusta tomarme fotos con la gente, pero contigo era y es diferente, siento que cada foto es un momento único y que en un futuro podré ver como recuerdos muy lindos, recuerdos de ti.</p>
+      </div>
+      <img src="emisinlentesomg.jpeg" alt="Otro recuerdo">
+    </div>
+
+    <div class="modulo video-especial">
+  <h3 class="video-especial-titulo">Una rapida recopilación</h3>
+  <video src="makemake.mp4" controls poster="thumbnail-especial.jpg"></video>
+  <p class="video-especial-desc">
+    Antes del texto mas largo, un video especial.
+  </p>
+</div>
+
+
+<div class="modulo texto-especial">
+  <div class="coffee-stain stain-1"></div>
+  <div class="coffee-stain stain-2"></div>
+  
+  <p>Siempre que quieras puedes venir aquí a recordar las cosas que pasamos, recuerdo con nostalgia como me enojé con Alehi por qué me dijo que mi programa estaba feo, tus presentaciones súper wuaous, los stickers que te robé, las veces que veíamos algo y solo nos volvemos a ver y era suficiente para reírnos.</p>
+  
+  <p>¿Recuerdas cuando veíamos mis Reels de Instagram? Y bueno a veces salían cosas muy... raras sí. Las exposiciones con Irma y el estrés, sobretodo cuando no llevé el papel para el material didáctico (aún tengo ese rollo). No sé cuántas veces te tiré en el pasto pero disfruté cada una de ellas.</p>
+  
+  <p>Cuando te orienté a hacer el CRUD y no sabías cómo continuar así que empezabas a ponerte nerviosa y René solo se reía. Todo eso lo volvería a hacer, no me arrepiento de nada.</p>
+  
+  <p>Siempre que lo necesites estará esta carta aquí para ti. Es por eso que decidí hacer esta página, pero no es la única razón. Tú eres una de las pocas personas que sabe lo que pasé cuando no se dio lo del dual. César o Miguel probablemente lo ven como algo divertido o no sé, una cosa que ya tendría que superar. Y así lo hice, pero me costó mucho.</p>
+  
+  <p>A diferencia de la mayoría yo sí quería ser programador, quería con todas mis ganas serlo. Esas dos semanas fueron las peores de mi vida. Nadie, en serio nadie, se imagina cuánto me gustaba programar. Extrañaré mucho eso: los proyectos, las peleas con Mares y René, mis cosas locas, mis cosas más locas que existen pero a la vez no, cada línea de código, cada conocimiento nuevo que aprendía. Te juro que me encantaba ser programador, mi cariño hacia la programación es invaluable.</p>
+  
+  <p>¿Y recuerdas que también era invaluable? Mi cariño hacia ti. Es por eso que a ti te quise dedicar mi último proyecto, mi última línea de código, mi última idea, porque a ti te quise y te quiero incluso más que a la programación.</p>
+  
+  <div class="firma-especial">Gracias, Leslie</div>
+</div>
+
+
+
+    <div class="firma">Dedicado a los dos amores mas grandes que conoci en la prepa.  </div>
+  </div>
+
+  <script>
+    // Crear estrellas
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 200; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.width = `${Math.random() * 3}px`;
+      star.style.height = star.style.width;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.setProperty('--duration', `${Math.random() * 3 + 2}s`);
+      star.style.setProperty('--opacity', Math.random() * 0.5 + 0.1);
+      starsContainer.appendChild(star);
+    }
+
+    // Mensajes de bienvenida
+    const msgs = [msg1, msg2, msg3];
+    let i = 0;
+
+    function showNext() {
+      if (i < msgs.length) {
+        msgs[i].classList.add('visible');
+        setTimeout(() => {
+          msgs[i].classList.remove('visible');
+          i++;
+          showNext();
+        }, 3500);
+      } else {
+        // Mostrar sobre
+        document.getElementById("welcome").style.display = "none";
+        document.getElementById("sobre-container").style.display = "flex";
+      }
+    }
+
+    setTimeout(showNext, 1000);
+
+    // Interacción con el sobre
+    const sello = document.getElementById("sello");
+    const envelope = document.getElementById("envelope");
+    const card = document.getElementById("card");
+    const sealDust = document.getElementById("seal-dust");
+
+    function createDust() {
+      sealDust.innerHTML = '';
+      sealDust.style.opacity = '1';
+      
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('span');
+        const size = Math.random() * 12 + 3;
+        const tx = (Math.random() - 0.5) * 120;
+        const ty = Math.random() * 120 + 50;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.setProperty('--tx', `${tx}px`);
+        particle.style.setProperty('--ty', `${ty}px`);
+        particle.style.animationDelay = `${Math.random() * 0.5}s`;
+        
+        sealDust.appendChild(particle);
+      }
+      
+      setTimeout(() => {
+        sealDust.style.opacity = '0';
+      }, 1500);
+    }
+
+    envelope.addEventListener("click", () => {
+      sello.classList.add("break");
+      createDust();
+      envelope.classList.add("open");
+      
+      setTimeout(() => {
+        document.getElementById("sobre-container").style.display = "none";
+        card.style.display = "block";
+        document.body.style.background = 'radial-gradient(ellipse at center, #2C3E50 0%, #1A1A2E 100%)';
+      }, 1200);
+    });
+
+    // Efecto hover en el sobre
+    envelope.addEventListener('mouseenter', () => {
+      envelope.style.transform = 'translateY(-15px) rotateZ(2deg)';
+    });
+
+    envelope.addEventListener('mouseleave', () => {
+      envelope.style.transform = 'translateY(0) rotateZ(0)';
+    });
+
+    // Efecto de máquina de escribir
+    setTimeout(() => {
+      document.querySelector('.typewriter').style.borderRight = 'none';
+    }, 3500);
+  </script>
+</body>
+</html>
